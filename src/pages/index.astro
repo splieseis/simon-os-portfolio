@@ -1,5 +1,7 @@
 ---
 import BootSequence from '../components/react/BootSequence';
+import InventoryGrid from '../components/react/InventoryGrid';
+import { ThemeProvider } from '../components/react/ThemeProvider';
 import OsLayout from '../layouts/OsLayout.astro';
 ---
 
@@ -11,9 +13,14 @@ import OsLayout from '../layouts/OsLayout.astro';
     <meta name="generator" content={Astro.generator} />
     <title>SimonOS</title>
   </head>
-  <body class="bg-[#050505]">
+  <body>
     <OsLayout>
-      <BootSequence client:load />
+      <ThemeProvider client:load>
+        <BootSequence client:load />
+        <div id="desktop-layer" class="fixed inset-0 z-10 w-screen h-screen">
+          <InventoryGrid client:load />
+        </div>
+      </ThemeProvider>
     </OsLayout>
   </body>
 </html>
