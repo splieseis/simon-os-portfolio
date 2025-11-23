@@ -25,6 +25,12 @@ export interface LevelThreshold {
 /**
  * Level thresholds configuration
  * 
+ * IMPORTANT INDEXING CONVENTION:
+ * - Array is 0-indexed (standard JavaScript)
+ * - Level numbers are 1-indexed (standard for games/leveling systems)
+ * - Array index 0 corresponds to Level 1, index 1 to Level 2, etc.
+ * - To access threshold for level N, use: LEVEL_THRESHOLDS[N - 1]
+ * 
  * Each entry defines the total XP needed to reach that level.
  * The system will automatically calculate XP needed per level.
  * 
@@ -34,16 +40,16 @@ export interface LevelThreshold {
  * - Exponential: Use formulas like `Math.floor(50 * Math.pow(1.5, level - 1))`
  */
 export const LEVEL_THRESHOLDS: number[] = [
-  0,    // Level 1: 0 XP (starting level)
-  50,   // Level 2: 50 XP
-  150,  // Level 3: 150 XP
-  300,  // Level 4: 300 XP
-  600,  // Level 5: 600 XP
-  1000, // Level 6: 1000 XP
-  1500, // Level 7: 1500 XP
-  2500, // Level 8: 2500 XP
-  4000, // Level 9: 4000 XP
-  6000, // Level 10: 6000 XP
+  0,    // Level 1: 0 XP (starting level) - index 0
+  50,   // Level 2: 50 XP - index 1
+  150,  // Level 3: 150 XP - index 2
+  300,  // Level 4: 300 XP - index 3
+  600,  // Level 5: 600 XP - index 4
+  1000, // Level 6: 1000 XP - index 5
+  1500, // Level 7: 1500 XP - index 6
+  2500, // Level 8: 2500 XP - index 7
+  4000, // Level 9: 4000 XP - index 8
+  6000, // Level 10: 6000 XP - index 9
   // Add more levels as needed...
   // The system will automatically extend the pattern for higher levels
 ];
@@ -84,7 +90,12 @@ export const LEVEL_PATTERN_CONFIG = {
   /** For custom: Function that takes level number and returns total XP required */
   customFunction: (level: number): number => {
     // Example: Level 11+ uses exponential growth
+    // baseLevel is the count of defined levels, so the last defined level is at index (baseLevel - 1)
     const baseLevel = LEVEL_THRESHOLDS.length;
+    // Validate bounds: baseLevel - 1 must be a valid index (guaranteed if array has at least 1 element)
+    if (baseLevel === 0) {
+      return 0; // Fallback if array is empty
+    }
     const baseXp = LEVEL_THRESHOLDS[baseLevel - 1];
     return Math.floor(baseXp * Math.pow(1.5, level - baseLevel));
   },

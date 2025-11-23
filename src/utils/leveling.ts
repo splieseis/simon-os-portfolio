@@ -36,39 +36,52 @@ function getTotalXpForLevel(level: number): number {
     return 0;
   }
 
-  // If level is within defined thresholds, return it directly
-  if (level - 1 < LEVEL_THRESHOLDS.length) {
-    return LEVEL_THRESHOLDS[level - 1];
-  }
+  // Convert 1-based level to 0-based array index
+  // Level 1 -> index 0, Level 2 -> index 1, etc.
+  const arrayIndex = level - 1;
 
-  // Calculate XP for levels beyond defined thresholds
-  const baseLevel = LEVEL_THRESHOLDS.length;
-  const baseXp = LEVEL_THRESHOLDS[baseLevel - 1];
-  const levelsBeyond = level - baseLevel;
-
-  switch (LEVEL_PATTERN) {
-    case 'linear':
-      return baseXp + (levelsBeyond * LEVEL_PATTERN_CONFIG.linearIncrement);
+  // Validate array bounds before access
+  if (arrayIndex < 0 || arrayIndex >= LEVEL_THRESHOLDS.length) {
+    // Level is beyond defined thresholds, calculate it
+    const baseLevel = LEVEL_THRESHOLDS.length;
     
-    case 'exponential': {
-      const multiplier = LEVEL_PATTERN_CONFIG.exponentialMultiplier;
-      const baseIncrement = LEVEL_PATTERN_CONFIG.exponentialBaseIncrement;
-      let totalXp = baseXp;
-      let currentIncrement = baseIncrement;
-      for (let i = 0; i < levelsBeyond; i++) {
-        totalXp += Math.floor(currentIncrement);
-        currentIncrement *= multiplier;
-      }
-      return totalXp;
+    // Safety check: ensure array is not empty
+    if (baseLevel === 0) {
+      return 0; // Fallback if array is empty
     }
     
-    case 'custom':
-      return LEVEL_PATTERN_CONFIG.customFunction(level);
-    
-    default:
-      // Fallback to linear
-      return baseXp + (levelsBeyond * 1000);
+    // baseLevel is the count of defined levels, so the last defined level is at index (baseLevel - 1)
+    const baseXp = LEVEL_THRESHOLDS[baseLevel - 1];
+    const levelsBeyond = level - baseLevel;
+
+    switch (LEVEL_PATTERN) {
+      case 'linear':
+        return baseXp + (levelsBeyond * LEVEL_PATTERN_CONFIG.linearIncrement);
+      
+      case 'exponential': {
+        const multiplier = LEVEL_PATTERN_CONFIG.exponentialMultiplier;
+        const baseIncrement = LEVEL_PATTERN_CONFIG.exponentialBaseIncrement;
+        let totalXp = baseXp;
+        let currentIncrement = baseIncrement;
+        for (let i = 0; i < levelsBeyond; i++) {
+          totalXp += Math.floor(currentIncrement);
+          currentIncrement *= multiplier;
+        }
+        return totalXp;
+      }
+      
+      case 'custom':
+        return LEVEL_PATTERN_CONFIG.customFunction(level);
+      
+      default:
+        // Fallback to linear
+        return baseXp + (levelsBeyond * 1000);
+    }
   }
+
+  // Level is within defined thresholds, return it directly
+  // arrayIndex is guaranteed to be valid at this point
+  return LEVEL_THRESHOLDS[arrayIndex];
 }
 
 /**
