@@ -1,4 +1,4 @@
-# 👾 SimonOS (v0.0.1)
+# 👾 SimonOS (v0.0.2)
 
 > **Turn your life into a video game.**
 
@@ -19,6 +19,12 @@ It combines the performance of **Astro** (static HTML) with the interactivity of
 ## ✨ Key Features
 
 - **🎮 Retro Terminal Aesthetic:** CRT scanlines, neon glow, and pixel fonts (`Press Start 2P`, `VT323`).
+
+- **🎨 Dynamic Theming System:** Fully customizable themes with support for custom colors, backgrounds, and icon sets. Switch themes programmatically or create your own.
+
+- **🖼️ Custom Icon Support:** Use theme-specific image icons or built-in Lucide icons. The neon theme includes 24+ custom icons for a cohesive retro-futuristic look.
+
+- **📱 Responsive Design:** Fully responsive layout that adapts beautifully from mobile to desktop with breakpoint-optimized spacing, typography, and grid layouts.
 
 - **⚡️ Zero-Database:** Content is managed via `src/config` (JSON) and `src/content` (Markdown).
 
@@ -107,12 +113,27 @@ export const inventory = [
     type: 'project',
     title: 'My Cool App',
     description: 'A description of what I built.',
-    icon: 'rocket', // Lucide icon name
+    icon: 'rocket', // Lucide icon name or custom theme icon
     link: 'https://github.com/...'
   },
   // Add as many as you want!
 ]
 ```
+
+### 3. Customize Themes
+
+SimonOS includes a powerful theming system. The default "Neon Matrix" theme comes with:
+- Custom background image
+- 24+ custom icons (WebP format)
+- Custom color palette
+
+To create your own theme or modify existing ones, see the [Theming Guide](./THEMING.md).
+
+**Quick Theme Setup:**
+1. Add your theme folder: `public/assets/themes/{theme-id}/`
+2. Add background image and icons
+3. Configure in `src/config/themes.ts`
+4. Switch themes programmatically via `setTheme('theme-id')`
 
 ## 📂 Project Structure
 
@@ -131,7 +152,10 @@ export const inventory = [
 ## 🗺️ Roadmap
 
 - [x] Kernel: Boot Sequence & Asset Loading
-- [ ] Desktop: Inventory Grid & CRT Effects
+- [x] Desktop: Inventory Grid & CRT Effects
+- [x] Theming System: Dynamic theme configuration with custom assets
+- [x] Custom Icons: Theme-specific icon support (24+ icons in neon theme)
+- [x] Responsive Design: Mobile-first responsive layout improvements
 - [ ] App Overlay: Console-style modal interactions
 - [ ] Registry: Tool mapping system
 - [ ] Cartridge Club: Webring implementation
