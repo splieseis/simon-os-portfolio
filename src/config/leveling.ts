@@ -79,6 +79,8 @@ export const LEVEL_PATTERN_CONFIG = {
   linearIncrement: 2000,
   /** For exponential: Multiplier per level (e.g., 1.5 means 50% increase per level) */
   exponentialMultiplier: 1.5,
+  /** For exponential: Starting increment per level beyond defined thresholds */
+  exponentialBaseIncrement: 2000,
   /** For custom: Function that takes level number and returns total XP required */
   customFunction: (level: number): number => {
     // Example: Level 11+ uses exponential growth

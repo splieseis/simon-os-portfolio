@@ -52,9 +52,12 @@ function getTotalXpForLevel(level: number): number {
     
     case 'exponential': {
       const multiplier = LEVEL_PATTERN_CONFIG.exponentialMultiplier;
+      const baseIncrement = LEVEL_PATTERN_CONFIG.exponentialBaseIncrement;
       let totalXp = baseXp;
+      let currentIncrement = baseIncrement;
       for (let i = 0; i < levelsBeyond; i++) {
-        totalXp = Math.floor(totalXp * multiplier);
+        totalXp += Math.floor(currentIncrement);
+        currentIncrement *= multiplier;
       }
       return totalXp;
     }
