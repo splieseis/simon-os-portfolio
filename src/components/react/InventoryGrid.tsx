@@ -1,47 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@nanostores/react';
 import { isBooting, openApp } from '../../store/os-store';
 import { getThemeIconPath } from '../../store/theme-store';
+import { githubStats, isLoadingGithubStats } from '../../store/github-stats-store';
 import { inventory } from '../../config/inventory';
 import * as LucideIcons from 'lucide-react';
-import type { InventoryItem } from '../../types';
-import type { GithubStats } from '../../utils/github-stats';
 import { calculateLevelInfo, formatXpProgress } from '../../utils/leveling';
 
 const TOTAL_SLOTS = 48;
 
-interface InventoryGridProps {
-  githubStats?: GithubStats;
-}
-
-export const InventoryGrid: React.FC<InventoryGridProps> = ({ githubStats: initialStats }) => {
+export const InventoryGrid: React.FC = () => {
   const booting = useStore(isBooting);
-  const [githubStats, setGithubStats] = useState<GithubStats | undefined>(initialStats);
-  
-  useEffect(() => {
-    const fetchFreshStats = async () => {
-      try {
-        const response = await fetch('/api/github-stats');
-        if (response.ok) {
-          const freshStats = await response.json();
-          setGithubStats(freshStats);
-        }
-      } catch (error) {
-        // Keep using initial stats on error
-      }
-    };
-
-    const timer = setTimeout(fetchFreshStats, 1000);
-    return () => clearTimeout(timer);
-  }, [initialStats]);
+  const stats = useStore(githubStats);
+  const isLoading = useStore(isLoadingGithubStats);
   
   const formatNumber = (num: number): string => {
     return num.toLocaleString();
   };
 
-  const levelInfo = githubStats?.totalCommits 
-    ? calculateLevelInfo(githubStats.totalCommits)
+  const levelInfo = stats?.totalCommits 
+    ? calculateLevelInfo(stats.totalCommits)
     : calculateLevelInfo(0);
 
   const handleItemClick = (itemId: string, link?: string) => {
@@ -76,7 +55,11 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ githubStats: initi
             </h1>
             <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 font-pixel-body text-neon text-[8px] sm:text-[9px] md:text-xs lg:text-sm flex-shrink-0">
               <LucideIcons.GitCommit className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-neon" />
-              <span className="whitespace-nowrap">{githubStats?.totalCommits ? formatNumber(githubStats.totalCommits) : '0'}</span>
+              {isLoading ? (
+                <span className="whitespace-nowrap animate-pulse">Loading...</span>
+              ) : (
+                <span className="whitespace-nowrap">{stats?.totalCommits ? formatNumber(stats.totalCommits) : '0'}</span>
+              )}
             </div>
           </div>
         </div>
@@ -156,9 +139,15 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ githubStats: initi
             </div>
             <div className="flex flex-col gap-0.5 sm:gap-1 md:gap-1.5 min-w-0">
               <div className="flex items-baseline gap-1.5 sm:gap-2 md:gap-3 flex-wrap">
-                <span className="font-pixel-body text-neon text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold tracking-wide text-glow whitespace-nowrap">
-                  {githubStats?.totalCommits ? formatNumber(githubStats.totalCommits) : '0'}
-                </span>
+                {isLoading ? (
+                  <span className="font-pixel-body text-neon text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold tracking-wide text-glow whitespace-nowrap animate-pulse">
+                    Loading...
+                  </span>
+                ) : (
+                  <span className="font-pixel-body text-neon text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold tracking-wide text-glow whitespace-nowrap">
+                    {stats?.totalCommits ? formatNumber(stats.totalCommits) : '0'}
+                  </span>
+                )}
                 <span className="font-pixel-body text-neon/90 text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wider whitespace-nowrap">
                   COMMITS
                 </span>
@@ -171,11 +160,15 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ githubStats: initi
                   {formatXpProgress(levelInfo)}
                 </span>
               </div>
-              {githubStats?.lastCommit && (
-                <span className="font-pixel-body text-neon/75 text-[10px] sm:text-[11px] md:text-xs lg:text-sm whitespace-nowrap">
-                  Last: {githubStats.lastCommit.timeAgo}
+              {isLoading ? (
+                <span className="font-pixel-body text-neon/75 text-[10px] sm:text-[11px] md:text-xs lg:text-sm whitespace-nowrap animate-pulse">
+                  Loading...
                 </span>
-              )}
+              ) : stats?.lastCommit ? (
+                <span className="font-pixel-body text-neon/75 text-[10px] sm:text-[11px] md:text-xs lg:text-sm whitespace-nowrap">
+                  Last: {stats.lastCommit.timeAgo}
+                </span>
+              ) : null}
             </div>
           </div>
 

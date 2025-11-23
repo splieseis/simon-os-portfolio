@@ -3,9 +3,6 @@ import BootSequence from '../components/react/BootSequence';
 import InventoryGrid from '../components/react/InventoryGrid';
 import { ThemeProvider } from '../components/react/ThemeProvider';
 import OsLayout from '../layouts/OsLayout.astro';
-import { fetchGithubStats } from '../utils/github-stats';
-
-const githubStats = await fetchGithubStats();
 ---
 
 <html lang="en">
@@ -21,7 +18,7 @@ const githubStats = await fetchGithubStats();
       <ThemeProvider client:load>
         <BootSequence client:load />
         <div id="desktop-layer" class="fixed inset-0 z-10 w-screen h-screen">
-          <InventoryGrid client:load githubStats={githubStats} />
+          <InventoryGrid client:load />
         </div>
       </ThemeProvider>
     </OsLayout>

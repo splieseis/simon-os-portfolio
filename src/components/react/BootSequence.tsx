@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setBootStatus } from '../../store/os-store';
+import { fetchGithubStatsInBackground } from '../../store/github-stats-store';
 import { ProgressBar } from './ProgressBar';
 
 const BOOT_LOGS = [
@@ -23,6 +24,8 @@ export const BootSequence = () => {
   useEffect(() => {
     if (hasBooted.current) return;
     hasBooted.current = true;
+
+    fetchGithubStatsInBackground();
 
     let currentProgress = 0;
     let logIndex = 0;
