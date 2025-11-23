@@ -51,7 +51,9 @@ export const LEVEL_THRESHOLDS: number[] = [
   4000, // Level 9: 4000 XP - index 8
   6000, // Level 10: 6000 XP - index 9
   // Add more levels as needed...
-  // The system will automatically extend the pattern for higher levels
+  // Note: This file contains only static configuration. Any automatic extension
+  // of thresholds beyond the defined levels is implemented in the consumer code
+  // at runtime, specifically in src/utils/leveling.ts via the getTotalXpForLevel function.
 ];
 
 /**
