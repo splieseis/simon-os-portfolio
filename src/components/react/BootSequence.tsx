@@ -9,6 +9,7 @@ const BOOT_LOGS = [
   "Initializing Astro Shell...",
   "Loading React Components...",
   "Mounting Nano Stores State...",
+  "Fetching Github stats...",
   "Scanning Cartridge Shelf...",
   "Launching Window Manager...",
   "Establishing Satellite iFrame Connection...",
