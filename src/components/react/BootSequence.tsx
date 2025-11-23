@@ -25,7 +25,9 @@ export const BootSequence = () => {
     if (hasBooted.current) return;
     hasBooted.current = true;
 
-    fetchGithubStatsInBackground();
+    fetchGithubStatsInBackground().catch((error) => {
+      console.error('Failed to fetch GitHub stats during boot:', error);
+    });
 
     let currentProgress = 0;
     let logIndex = 0;
