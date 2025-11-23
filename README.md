@@ -88,6 +88,44 @@ bun install
 # or npm install
 ```
 
+**Set up GitHub Stats (Optional)**
+
+To display your GitHub commit stats (all-time total commits and last commit time), you'll need a GitHub Personal Access Token:
+
+1. Go to [GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)](https://github.com/settings/tokens)
+2. Generate a new token
+3. Check the **`repo`** scope (to access private repositories) and **`read:user`** (to read profile stats)
+   - **Note:** You do NOT need `user:email` - the API doesn't read email addresses
+4. Create a `.env` file in the project root and add:
+
+```bash
+GITHUB_TOKEN=ghp_your_secret_token_here
+```
+
+**Environment Variables:**
+- **`GITHUB_TOKEN`** (optional): Your GitHub Personal Access Token for fetching commit statistics
+  - If not provided, stats will show `0` commits gracefully
+  - The token is only used server-side during build and never exposed to clients
+  - Make sure `.env` is in your `.gitignore` (it already is!)
+- **`GITHUB_STATS_MAX_YEARS`** (optional): Maximum years of commit history to fetch (default: `10`)
+  - Example: `GITHUB_STATS_MAX_YEARS=20` to query last 20 years
+  - Higher values = more complete counts but slower builds (more API calls)
+
+**Important Notes:**
+- **Year Limit:** By default, only the **last 10 years** of commits are counted (to prevent excessive API calls)
+  - Set `GITHUB_STATS_MAX_YEARS` in your `.env` to increase this limit
+  - Due to GitHub API limitations, each year requires a separate API call
+- **Dynamic Updates:** Stats automatically refresh for visitors without rebuilding!
+  - Initial page load shows build-time stats (fast)
+  - After 1 second, fresh stats are fetched from `/api/github-stats`
+  - API responses are cached for 15 minutes to reduce GitHub API calls
+  - **Hosting:** Requires a platform that supports serverless functions (Vercel, Netlify, Cloudflare Pages, etc.)
+- **Email Association:** The `contributionsCollection` API aggregates commits based on your GitHub account identity. If you've pushed commits with multiple emails, make sure all those email addresses are:
+  - Verified in your GitHub account
+  - Added to your account's email settings (Settings > Emails)
+
+Commits made with emails not associated with your GitHub account won't be counted in the total.
+
 **Start the Dev Server**
 
 ```bash

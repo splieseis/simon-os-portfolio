@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@nanostores/react';
 import { isBooting, openApp } from '../../store/os-store';
@@ -6,11 +6,45 @@ import { getThemeIconPath } from '../../store/theme-store';
 import { inventory } from '../../config/inventory';
 import * as LucideIcons from 'lucide-react';
 import type { InventoryItem } from '../../types';
+import type { GithubStats } from '../../utils/github-stats';
 
 const TOTAL_SLOTS = 48;
 
-export const InventoryGrid: React.FC = () => {
+interface InventoryGridProps {
+  githubStats?: GithubStats;
+}
+
+export const InventoryGrid: React.FC<InventoryGridProps> = ({ githubStats: initialStats }) => {
   const booting = useStore(isBooting);
+  const [githubStats, setGithubStats] = useState<GithubStats | undefined>(initialStats);
+  
+  useEffect(() => {
+    const fetchFreshStats = async () => {
+      try {
+        const response = await fetch('/api/github-stats');
+        if (response.ok) {
+          const freshStats = await response.json();
+          setGithubStats(freshStats);
+        }
+      } catch (error) {
+        // Keep using initial stats on error
+      }
+    };
+
+    if (initialStats && initialStats.totalCommits > 0) {
+      const timer = setTimeout(fetchFreshStats, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [initialStats]);
+  
+  const formatNumber = (num: number): string => {
+    return num.toLocaleString();
+  };
+  
+  const COMMIT_GOAL = 2000;
+  const progressPercentage = githubStats?.totalCommits 
+    ? Math.min(100, Math.round((githubStats.totalCommits / COMMIT_GOAL) * 100))
+    : 0;
 
   const handleItemClick = (itemId: string, link?: string) => {
     if (link) {
@@ -44,7 +78,7 @@ export const InventoryGrid: React.FC = () => {
             </h1>
             <div className="flex items-center gap-1 sm:gap-2 font-pixel-body text-neon text-[8px] sm:text-xs md:text-sm flex-shrink-0">
               <span className="text-sm sm:text-base md:text-lg">◆</span>
-              <span className="whitespace-nowrap">COMMITS: 1245</span>
+              <span className="whitespace-nowrap">COMMITS: {githubStats?.totalCommits ? formatNumber(githubStats.totalCommits) : '0'}</span>
             </div>
           </div>
         </div>
@@ -121,7 +155,10 @@ export const InventoryGrid: React.FC = () => {
                 LAST COMMIT
               </span>
               <span className="font-pixel-body text-neon/70 text-[8px] sm:text-[9px] md:text-[10px]">
-                LAST COMMIT: 2 HOURS AGO
+                {githubStats?.lastCommit 
+                  ? `LAST COMMIT: ${githubStats.lastCommit.timeAgo}`
+                  : 'LAST COMMIT: N/A'
+                }
               </span>
             </div>
             <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex items-center justify-center bg-neon/20 border border-neon sm:border-2">
@@ -182,10 +219,13 @@ export const InventoryGrid: React.FC = () => {
 
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-end">
             <span className="font-pixel-body text-neon text-[10px] sm:text-xs md:text-sm uppercase tracking-wide whitespace-nowrap">
-              COMMITS: 1245
+              COMMITS: {githubStats?.totalCommits ? formatNumber(githubStats.totalCommits) : '0'}
             </span>
             <div className="w-24 sm:w-28 md:w-36 h-2.5 sm:h-3 bg-os-dark border border-neon sm:border-2 relative overflow-hidden">
-              <div className="h-full bg-neon w-[78%] relative">
+              <div 
+                className="h-full bg-neon relative transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
               </div>
             </div>
