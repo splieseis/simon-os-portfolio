@@ -232,7 +232,14 @@ export const InventoryGrid: React.FC = () => {
                 {levelInfo.progressToNextLevel}%
               </span>
             </div>
-            <div className="w-full sm:w-28 md:w-36 lg:w-40 xl:w-44 h-2.5 sm:h-3 md:h-3.5 lg:h-4 bg-os-dark border-2 sm:border-3 md:border-4 border-neon relative overflow-hidden shadow-neon">
+            <div 
+              role="progressbar"
+              aria-valuenow={Math.round(levelInfo.progressToNextLevel)}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Level progress"
+              className="w-full sm:w-28 md:w-36 lg:w-40 xl:w-44 h-2.5 sm:h-3 md:h-3.5 lg:h-4 bg-os-dark border-2 sm:border-3 md:border-4 border-neon relative overflow-hidden shadow-neon"
+            >
               <div 
                 className="h-full bg-neon relative transition-all duration-500 ease-out"
                 style={{ width: `${levelInfo.progressToNextLevel}%` }}
