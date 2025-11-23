@@ -41,9 +41,11 @@ export const BootSequence = () => {
       if (currentProgress >= 100) {
         clearInterval(interval);
         setLogs(BOOT_LOGS);
-        setBootStatus(false);
         setTimeout(() => {
           setIsVisible(false);
+          setTimeout(() => {
+            setBootStatus(false);
+          }, 800);
         }, 300);
       }
     }, 300);
