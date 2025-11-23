@@ -31,10 +31,8 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ githubStats: initi
       }
     };
 
-    if (initialStats && initialStats.totalCommits > 0) {
-      const timer = setTimeout(fetchFreshStats, 1000);
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(fetchFreshStats, 1000);
+    return () => clearTimeout(timer);
   }, [initialStats]);
   
   const formatNumber = (num: number): string => {
