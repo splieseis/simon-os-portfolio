@@ -1,0 +1,254 @@
+# SimonOS - Cursor AI Rules
+
+## Project Overview
+This is SimonOS, an open-source portfolio/workspace template built with Astro, React, and Tailwind CSS v4. The project emphasizes modularity, maintainability, and a retro-futuristic aesthetic.
+
+## Core Principles
+
+### 1. NO INLINE STYLES
+- **NEVER** use inline `style` attributes in JSX/TSX or HTML
+- **ALWAYS** use Tailwind utility classes or custom CSS classes
+- Exception: Dynamic styles that absolutely require JavaScript calculations should use CSS variables, not inline styles
+
+**❌ BAD:**
+```tsx
+<div style={{ color: '#39ff14', padding: '20px' }}>
+```
+
+**✅ GOOD:**
+```tsx
+<div className="text-neon p-5">
+```
+
+**✅ ACCEPTABLE (for truly dynamic values):**
+```tsx
+<div style={{ transform: `translateX(${position}px)` }}>
+```
+
+### 2. Modular Architecture
+
+#### Component Structure
+- Keep components small and focused (single responsibility)
+- Extract reusable UI elements into separate components
+- Use composition over inheritance
+- Place shared components in `src/components/react/` or `src/components/astro/`
+
+#### File Organization
+```
+src/
+  components/     # Reusable UI components
+  layouts/        # Page layouts
+  pages/          # Routes
+  styles/         # Global styles and utilities
+  store/          # State management (nanostores)
+  config/         # Configuration files
+  types/          # TypeScript definitions
+```
+
+### 3. Centralized Styling System
+
+#### Color Management
+- **ALL colors** must be defined in `src/styles/global.css` under `@theme`
+- Use semantic color names (e.g., `neon`, `os-black`, not `green`, `dark`)
+- Reference colors via Tailwind classes: `text-neon`, `bg-os-black`
+- Never hardcode hex/rgb values in components
+
+**✅ Define once:**
+```css
+@theme {
+  --color-neon: #39ff14;
+  --color-primary: #00ffff;
+}
+```
+
+**✅ Use everywhere:**
+```tsx
+<div className="text-neon border-primary">
+```
+
+#### Custom Utilities
+- Create reusable utility classes in `global.css` under `@layer utilities`
+- Name utilities descriptively: `.crt-overlay`, `.text-glow`, `.shadow-neon`
+- Document complex utilities with comments
+
+### 4. Tailwind CSS v4 Best Practices
+
+- Use Tailwind's built-in utilities first
+- Group related classes logically
+- Use responsive prefixes: `sm:`, `md:`, `lg:`
+- Leverage arbitrary values sparingly: `w-[420px]` (prefer defined spacing scale)
+- Use opacity modifiers: `bg-neon/50`, `text-black/80`
+
+#### Class Organization Order
+1. Layout (display, position, flex/grid)
+2. Spacing (padding, margin)
+3. Sizing (width, height)
+4. Typography (font, text size/color)
+5. Visual (background, border, shadow)
+6. Interactions (hover, focus, transition)
+
+**Example:**
+```tsx
+<div className="flex items-center justify-between gap-4 p-6 w-full border-4 border-neon bg-os-black hover:bg-neon/20 transition-all duration-200">
+```
+
+### 5. Component Patterns
+
+#### React Components
+```tsx
+// ✅ GOOD: Modular, typed, uses Tailwind
+import React from 'react';
+import type { ComponentProps } from '../../types';
+
+interface ButtonProps {
+  variant?: 'primary' | 'secondary';
+  onClick?: () => void;
+  children: React.ReactNode;
+}
+
+export const Button: React.FC<ButtonProps> = ({ 
+  variant = 'primary', 
+  onClick, 
+  children 
+}) => {
+  const variantClasses = {
+    primary: 'bg-neon text-os-black hover:bg-neon/80',
+    secondary: 'border-2 border-neon text-neon hover:bg-neon/20'
+  };
+
+  return (
+    <button 
+      onClick={onClick}
+      className={`px-6 py-3 font-pixel-body transition-all duration-200 ${variantClasses[variant]}`}
+    >
+      {children}
+    </button>
+  );
+};
+```
+
+#### Astro Components
+```astro
+---
+// ✅ GOOD: Props interface, modular
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<div class="border-4 border-neon bg-os-black p-6">
+  <h2 class="font-pixel-header text-neon text-xl">{title}</h2>
+  {description && (
+    <p class="font-pixel-body text-neon/70 mt-2">{description}</p>
+  )}
+</div>
+```
+
+### 6. State Management
+
+- Use nanostores for global state
+- Keep stores focused and single-purpose
+- Export actions alongside atoms
+- Document store purpose at the top of the file
+
+```tsx
+// ✅ GOOD: Clear, modular state management
+import { atom } from 'nanostores';
+
+// Boot state management
+export const isBooting = atom(true);
+
+// Actions
+export const setBootStatus = (status: boolean) => {
+  isBooting.set(status);
+};
+```
+
+### 7. TypeScript
+
+- Always define proper types and interfaces
+- Use `type` for unions/primitives, `interface` for objects
+- Export types from `src/types/` for reusability
+- Avoid `any` - use `unknown` if type is truly unknown
+
+### 8. Performance
+
+- Lazy load components when appropriate
+- Use `client:load`, `client:visible`, `client:idle` directives wisely in Astro
+- Optimize images in `/public/assets/`
+- Keep bundle size small by avoiding unnecessary dependencies
+
+### 9. Accessibility
+
+- Use semantic HTML elements
+- Include proper ARIA labels for interactive elements
+- Ensure keyboard navigation works
+- Maintain color contrast ratios (tools: WebAIM)
+
+### 10. Code Style
+
+- Use clear, descriptive variable names
+- Comment complex logic, not obvious code
+- Keep functions small (< 50 lines ideally)
+- Use early returns to reduce nesting
+- Format with Prettier (if configured)
+
+## Template-Specific Guidelines
+
+### Theme Customization
+Users should be able to change the theme by editing **ONE location**:
+```css
+/* src/styles/global.css */
+@theme {
+  --color-neon: #39ff14;  /* Change this! */
+}
+```
+
+### Adding New Components
+1. Create in appropriate folder (`react/` or `astro/`)
+2. Export from component file
+3. Add to registry if it's an "app" (`src/apps/registry.tsx`)
+4. Document props/usage with JSDoc comments
+
+### Configuration
+- Site config: `src/config/site.ts`
+- Inventory items: `src/config/inventory.ts`
+- Keep configs simple and well-typed
+
+## Common Pitfalls to Avoid
+
+❌ Inline styles
+❌ Hardcoded colors
+❌ Massive components (>200 lines)
+❌ Deep prop drilling (use stores)
+❌ Mixing concerns (logic + presentation)
+❌ Duplicate utility classes (extract to reusable component)
+❌ Missing TypeScript types
+❌ Non-semantic HTML (div soup)
+
+## Code Review Checklist
+
+Before committing, ensure:
+- [ ] No inline styles used
+- [ ] All colors reference theme variables
+- [ ] Components are modular and focused
+- [ ] TypeScript types are defined
+- [ ] Tailwind classes are organized logically
+- [ ] No hardcoded magic numbers
+- [ ] Accessibility considerations addressed
+- [ ] Code is documented where complex
+
+## Questions?
+
+When in doubt:
+1. Is it reusable? → Extract to component
+2. Is it a style? → Use Tailwind or CSS class
+3. Is it a color? → Use theme variable
+4. Is it state? → Use nanostore
+5. Is it configuration? → Use config file
+
+Keep it modular, keep it maintainable, keep it awesome! 🚀
+
