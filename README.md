@@ -1,4 +1,4 @@
-# 👾 SimonOS (v0.0.2)
+# 👾 SimonOS (v0.1.0)
 
 > **Turn your life into a video game.**
 
@@ -12,7 +12,7 @@
 
 ## 📖 About
 
-**SimonOS** is a "Headless Operating System" built for developers who want a portfolio that stands out in a sea of generic SaaS landing pages.
+**SimonOS** is a "Headless Operating System" built for developers who want a portfolio that stands out in a sea of generic pages and cvs.
 
 It combines the performance of **Astro** (static HTML) with the interactivity of **React** (focus modals) to create a retro-futuristic console interface. It features a config-driven architecture, meaning you can add projects, tools, and blog posts without touching the core code—just edit a JSON file.
 
@@ -43,6 +43,8 @@ It combines the performance of **Astro** (static HTML) with the interactivity of
 - **📄 CV/Resume with PDF Download:** Professional CV display with PDF download button. Customize via `src/config/cv.ts` and place your PDF in `public/assets/`.
 
 - **🔗 Flexible Action System:** Each inventory item can be a direct link, iframe (for mini-apps), component overlay, or download action. Fully configurable and template-friendly.
+
+- **🎵 Background Music:** Per-theme background music system with simple play/pause toggle. Music files are theme-specific and automatically loop. Click the music icon in the header to start playing.
 
 ## 🏗️ Architecture
 
@@ -249,8 +251,9 @@ To create your own theme or modify existing ones, see the [Theming Guide](./THEM
 **Quick Theme Setup:**
 1. Add your theme folder: `public/assets/themes/{theme-id}/`
 2. Add background image and icons
-3. Configure in `src/config/themes.ts`
-4. Switch themes programmatically via `setTheme('theme-id')`
+3. Add music file (optional): `public/assets/themes/{theme-id}/music.mp3`
+4. Configure in `src/config/themes.ts` (add `music: 'music.mp3'` to assets)
+5. Switch themes programmatically via `setTheme('theme-id')`
 
 ## 📂 Project Structure
 
@@ -275,6 +278,7 @@ To create your own theme or modify existing ones, see the [Theming Guide](./THEM
 - [x] Responsive Design: Mobile-first responsive layout improvements
 - [x] App Overlay: Console-style modal interactions
 - [x] Registry: Tool mapping system
+- [x] Background Music: Per-theme music system with play/pause toggle
 - [ ] Cartridge Club: Webring implementation
 
 ## 🤝 Contributing

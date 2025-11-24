@@ -18,6 +18,7 @@ export interface ThemeConfig {
   // Asset paths (relative to public/assets/themes/{theme-id}/)
   assets: {
     background: string; // e.g., 'background.png'
+    music?: string; // e.g., 'music.mp3'
     icons?: {
       [iconName: string]: string; // e.g., { 'cv': 'cv.webp', 'custom-icon': 'custom.png' }
     };

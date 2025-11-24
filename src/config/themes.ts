@@ -27,6 +27,7 @@ export const themes: Record<string, ThemeConfig> = {
     },
     assets: {
       background: 'background.png',
+      music: 'music.mp3',
       icons: {
         'about-me': 'about-me.webp',
         'affiliate-link': 'affiliate-link.webp',

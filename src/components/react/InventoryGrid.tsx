@@ -9,6 +9,7 @@ import { groups, tabConfig } from '../../config/groups';
 import type { InventoryItem, ItemAction } from '../../types';
 import * as LucideIcons from 'lucide-react';
 import { calculateLevelInfo, formatXpProgress } from '../../utils/leveling';
+import { MusicPlayer } from './MusicPlayer';
 
 const TOTAL_SLOTS = 48;
 
@@ -97,7 +98,7 @@ export const InventoryGrid: React.FC = () => {
           transition={{ duration: 0.4, ease: 'easeOut' }}
           className="w-full h-screen flex flex-col p-2 sm:p-3 md:p-4 lg:p-6 overflow-hidden"
         >
-      <div className="w-full max-w-[1100px] mx-auto flex flex-col h-full min-h-0">
+      <div className="w-full max-w-[1100px] mx-auto flex flex-col h-full min-h-0 relative">
         <div className="border-2 sm:border-3 md:border-4 border-neon bg-os-black p-2 sm:p-3 md:p-4 relative flex-shrink-0 mb-2 sm:mb-3 md:mb-4">
           <div className="absolute inset-0 bg-gradient-to-r from-neon/10 via-transparent to-neon/10 pointer-events-none" />
           <div className="relative flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
@@ -105,6 +106,7 @@ export const InventoryGrid: React.FC = () => {
               <span className="break-words">MY PERSONAL PORTFOLIO & WORKSPACE</span>
             </h1>
             <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 font-pixel-body text-neon text-[8px] sm:text-[9px] md:text-xs lg:text-sm flex-shrink-0">
+              <MusicPlayer />
               <LucideIcons.GitCommit className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-neon" />
               {isLoading ? (
                 <span className="whitespace-nowrap animate-pulse">Loading...</span>
