@@ -8,7 +8,8 @@ export const inventory: InventoryItem[] = [
     icon: 'cv',
     action: 'download',
     componentKey: 'CV',
-    downloadPath: '/assets/cv.pdf' // Place your PDF in public/assets/cv.pdf
+    downloadPath: '/assets/cv.pdf',
+    group: ['personal', 'professional']
   },
   
   // Component overlay (About Me)
@@ -18,7 +19,8 @@ export const inventory: InventoryItem[] = [
     title: 'About Me', 
     icon: 'about-me', 
     action: 'component',
-    componentKey: 'AboutMe' 
+    componentKey: 'AboutMe',
+    group: ['personal', 'professional']
   },
   { 
     id: 'github', 
@@ -26,7 +28,8 @@ export const inventory: InventoryItem[] = [
     title: 'GitHub', 
     icon: 'github',
     action: 'link',
-    link: 'https://github.com/example' 
+    link: 'https://github.com/example',
+    group: ['personal', 'professional']
   },
   { 
     id: 'linkedin', 
@@ -34,7 +37,8 @@ export const inventory: InventoryItem[] = [
     title: 'LinkedIn', 
     icon: 'linkedin',
     action: 'link',
-    link: 'https://linkedin.com/in/example' 
+    link: 'https://linkedin.com/in/example',
+    group: ['personal', 'professional']
   },
   { 
     id: 'x-profile', 
@@ -42,36 +46,40 @@ export const inventory: InventoryItem[] = [
     title: 'X Profile', 
     icon: 'x',
     action: 'link',
-    link: 'https://x.com/example' 
+    link: 'https://x.com/example',
+    group: ['personal', 'professional']
   },
-  { id: 'software-projects', type: 'project', title: 'Software Projects', icon: 'software' },
+  { id: 'software-projects', type: 'project', title: 'Software Projects', icon: 'software', group: 'professional' },
   { 
     id: 'portfolio-repo', 
     type: 'project', 
     title: 'Portfolio Source', 
     icon: 'simon-os-github', 
     action: 'link',
-    link: 'https://github.com/splieseis/simon-os' 
+    link: 'https://github.com/splieseis/simon-os',
+    group: 'professional'
   },
-  { id: 'work-projects', type: 'project', title: 'Work Projects', icon: 'work' },
-  { id: 'side-hustles', type: 'project', title: 'Side Hustles', icon: 'side-hustles' },
-  { id: 'contact', type: 'social', title: 'Contact', icon: 'contact' },
-  { id: 'mini-apps', type: 'mini-app', title: 'Mini Apps', icon: 'apps' },
-  { id: 'old-projects-museum', type: 'project', title: 'Old Projects Museum', icon: 'museum' },
-  { id: 'startups', type: 'project', title: 'Startups', icon: 'rocket' },
-  { id: 'bookmarks', type: 'writing', title: 'Bookmarks', icon: 'bookmarks' },
-  { id: 'random-thoughts', type: 'writing', title: 'Random Thoughts', icon: 'thoughts' },
-  { id: 'affiliate-links', type: 'social', title: 'Affiliate Links', icon: 'affiliate-link' },
-  { id: 'settings', type: 'project', title: 'Settings', icon: 'settings' },
+  { id: 'work-projects', type: 'project', title: 'Work Projects', icon: 'work', category: 'work-projects', group: 'professional' },
+  { id: 'side-hustles', type: 'project', title: 'Side Hustles', icon: 'side-hustles', category: 'side-hustles', group: ['personal', 'professional'] },
+  { id: 'contact', type: 'social', title: 'Contact', icon: 'contact', group: 'personal' },
+  { id: 'mini-apps', type: 'mini-app', title: 'Mini Apps', icon: 'apps', category: 'mini-apps', group: 'professional' },
+  { id: 'old-projects-museum', type: 'project', title: 'Old Projects Museum', icon: 'museum', category: 'old-projects-museum', group: 'professional' },
+  { id: 'startups', type: 'project', title: 'Startups', icon: 'rocket', category: 'startups', group: 'professional' },
+  { id: 'bookmarks', type: 'writing', title: 'Bookmarks', icon: 'bookmarks', category: 'bookmarks', group: 'personal' },
+  { id: 'random-thoughts', type: 'writing', title: 'Random Thoughts', icon: 'thoughts', category: 'random-thoughts', group: 'blogs' },
+  { id: 'affiliate-links', type: 'social', title: 'Affiliate Links', icon: 'affiliate-link', group: 'personal' },
+  { id: 'settings', type: 'project', title: 'Settings', icon: 'settings', group: 'personal' },
   { 
     id: 'json-tool', 
     type: 'mini-app', 
     title: 'JSON Formatter', 
     icon: 'json', 
     action: 'component',
-    componentKey: 'JsonFormatter' 
+    componentKey: 'JsonFormatter',
+    categoryId: 'mini-apps',
+    group: 'professional'
   },
-  { id: 'newsletter-archive', type: 'writing', title: 'Newsletter Archive', icon: 'news' },
+  { id: 'newsletter-archive', type: 'writing', title: 'Newsletter Archive', icon: 'news', group: 'blogs' },
   // { id: 'blog-posts', type: 'writing', title: 'Blog Posts', icon: 'book-open' },
   // { id: 'free-tools', type: 'mini-app', title: 'Free Tools', icon: 'terminal' },
   // { id: 'recipes', type: 'recipe', title: 'Recipes', icon: 'chef-hat' },

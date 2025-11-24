@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@nanostores/react';
-import { isBooting, openApp } from '../../store/os-store';
+import { isBooting, openApp, activeGroup, activeCategoryTab, setActiveGroup, setActiveCategoryTab, closeCategoryTab } from '../../store/os-store';
 import { getThemeIconPath } from '../../store/theme-store';
 import { githubStats, isLoadingGithubStats } from '../../store/github-stats-store';
 import { inventory } from '../../config/inventory';
+import { groups, tabConfig } from '../../config/groups';
 import type { InventoryItem, ItemAction } from '../../types';
 import * as LucideIcons from 'lucide-react';
 import { calculateLevelInfo, formatXpProgress } from '../../utils/leveling';
@@ -15,6 +16,8 @@ export const InventoryGrid: React.FC = () => {
   const booting = useStore(isBooting);
   const stats = useStore(githubStats);
   const isLoading = useStore(isLoadingGithubStats);
+  const currentGroup = useStore(activeGroup);
+  const currentCategoryTab = useStore(activeCategoryTab);
   
   const formatNumber = (num: number): string => {
     return num.toLocaleString();
@@ -24,7 +27,41 @@ export const InventoryGrid: React.FC = () => {
     ? calculateLevelInfo(stats.totalCommits)
     : calculateLevelInfo(0);
 
+  const filteredItems = useMemo(() => {
+    let items = inventory;
+
+    if (currentCategoryTab) {
+      items = items.filter(item => item.categoryId === currentCategoryTab);
+    }
+
+    if (currentGroup) {
+      items = items.filter(item => {
+        if (!item.group) return true;
+        if (typeof item.group === 'string') {
+          return item.group === currentGroup;
+        }
+        return item.group.includes(currentGroup);
+      });
+    }
+
+    if (!currentCategoryTab) {
+      return items;
+    }
+
+    return items.filter(item => !item.category);
+  }, [currentGroup, currentCategoryTab]);
+
+  const currentCategoryItem = useMemo(() => {
+    if (!currentCategoryTab) return null;
+    return inventory.find(item => item.category === currentCategoryTab);
+  }, [currentCategoryTab]);
+
   const handleItemClick = (item: InventoryItem) => {
+    if (item.category) {
+      setActiveCategoryTab(item.category);
+      return;
+    }
+
     const action: ItemAction = item.action || (item.componentKey ? 'component' : item.link ? 'link' : 'component');
     
     if (action === 'link' && item.link) {
@@ -34,9 +71,20 @@ export const InventoryGrid: React.FC = () => {
     }
   };
 
+  const handleGroupClick = (groupId: string | null) => {
+    setActiveGroup(groupId);
+    if (currentCategoryTab) {
+      closeCategoryTab();
+    }
+  };
+
+  const handleCategoryTabClick = (categoryId: string | null) => {
+    setActiveCategoryTab(categoryId);
+  };
+
   const allSlots = [
-    ...inventory,
-    ...Array(Math.max(0, TOTAL_SLOTS - inventory.length)).fill(null)
+    ...filteredItems,
+    ...Array(Math.max(0, TOTAL_SLOTS - filteredItems.length)).fill(null)
   ];
 
   return (
@@ -49,8 +97,8 @@ export const InventoryGrid: React.FC = () => {
           transition={{ duration: 0.4, ease: 'easeOut' }}
           className="w-full h-screen flex flex-col p-2 sm:p-3 md:p-4 lg:p-6 overflow-hidden"
         >
-      <div className="w-full max-w-[1100px] mx-auto flex flex-col h-full min-h-0 gap-2 sm:gap-3 md:gap-4">
-        <div className="border-2 sm:border-3 md:border-4 border-neon bg-os-black p-2 sm:p-3 md:p-4 relative flex-shrink-0">
+      <div className="w-full max-w-[1100px] mx-auto flex flex-col h-full min-h-0">
+        <div className="border-2 sm:border-3 md:border-4 border-neon bg-os-black p-2 sm:p-3 md:p-4 relative flex-shrink-0 mb-2 sm:mb-3 md:mb-4">
           <div className="absolute inset-0 bg-gradient-to-r from-neon/10 via-transparent to-neon/10 pointer-events-none" />
           <div className="relative flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
             <h1 className="font-pixel-header text-neon text-[9px] sm:text-[10px] md:text-xs lg:text-base tracking-wide leading-tight flex-1 min-w-0">
@@ -67,7 +115,124 @@ export const InventoryGrid: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-2 sm:border-3 md:border-4 border-neon bg-os-black p-2 sm:p-3 md:p-4 lg:p-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0">
+        {tabConfig.style === 'silicon-chip' ? (
+          <div className="flex items-end gap-2 overflow-x-auto flex-shrink-0 relative -mb-[2px] sm:-mb-[3px] md:-mb-[4px]">
+            <button
+              onClick={() => handleGroupClick(null)}
+              className={`relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 font-pixel-body text-xs sm:text-sm md:text-base transition-all duration-200 whitespace-nowrap z-10 tab-chip ${
+                currentGroup === null
+                  ? 'tab-chip-active text-neon'
+                  : 'tab-chip-inactive text-neon/70 hover:text-neon'
+              }`}
+            >
+              <span className="relative z-10">All</span>
+            </button>
+            {groups.map((group) => (
+              <button
+                key={group.id}
+                onClick={() => handleGroupClick(group.id)}
+                className={`relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 font-pixel-body text-xs sm:text-sm md:text-base transition-all duration-200 whitespace-nowrap z-10 tab-chip ${
+                  currentGroup === group.id
+                    ? 'tab-chip-active text-neon'
+                    : 'tab-chip-inactive text-neon/70 hover:text-neon'
+                }`}
+              >
+                <span className="relative z-10">{group.label}</span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-end gap-0 overflow-x-auto flex-shrink-0 relative">
+            <div className="flex items-end gap-0">
+              <button
+                onClick={() => handleGroupClick(null)}
+                className={`relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 font-pixel-body text-xs sm:text-sm md:text-base transition-all duration-200 whitespace-nowrap z-10 tab-shape-first ${
+                  currentGroup === null
+                    ? 'bg-os-black text-neon border-t-2 border-l-2 border-r-2 border-neon border-b-0 shadow-neon -mb-[2px] sm:-mb-[3px] md:-mb-[4px]'
+                    : 'bg-os-dark text-neon/70 border-t-2 border-l-2 border-r-2 border-neon/50 border-b-2 hover:text-neon hover:border-neon mb-0'
+                }`}
+              >
+                <span className="relative z-10">All</span>
+                {currentGroup === null && (
+                  <div className="absolute inset-0 bg-gradient-to-b from-neon/10 to-transparent pointer-events-none" />
+                )}
+              </button>
+              {groups.map((group) => (
+                <button
+                  key={group.id}
+                  onClick={() => handleGroupClick(group.id)}
+                  className={`relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 font-pixel-body text-xs sm:text-sm md:text-base transition-all duration-200 whitespace-nowrap z-10 tab-shape-middle ${
+                    currentGroup === group.id
+                      ? 'bg-os-black text-neon border-t-2 border-l-2 border-r-2 border-neon border-b-0 shadow-neon -mb-[2px] sm:-mb-[3px] md:-mb-[4px]'
+                      : 'bg-os-dark text-neon/70 border-t-2 border-l-2 border-r-2 border-neon/50 border-b-2 hover:text-neon hover:border-neon mb-0'
+                  }`}
+                >
+                  <span className="relative z-10">{group.label}</span>
+                  {currentGroup === group.id && (
+                    <div className="absolute inset-0 bg-gradient-to-b from-neon/10 to-transparent pointer-events-none" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentCategoryTab && currentCategoryItem && (
+          <div className={`flex items-end ${tabConfig.style === 'silicon-chip' ? 'gap-2' : 'gap-0'} overflow-x-auto flex-shrink-0 relative mt-2 -mb-[2px] sm:-mb-[3px] md:-mb-[4px]`}>
+            {tabConfig.style === 'silicon-chip' ? (
+              <>
+                <button
+                  onClick={() => handleCategoryTabClick(null)}
+                  className="relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 font-pixel-body text-xs sm:text-sm md:text-base transition-all duration-200 whitespace-nowrap z-10 tab-chip tab-chip-inactive text-neon/70 hover:text-neon"
+                >
+                  <span className="relative z-10">Main</span>
+                </button>
+                <button
+                  className="relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 font-pixel-body text-xs sm:text-sm md:text-base transition-all duration-200 whitespace-nowrap z-10 tab-chip tab-chip-active text-neon flex items-center gap-2"
+                >
+                  <span className="relative z-10">{currentCategoryItem.title}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      closeCategoryTab();
+                    }}
+                    className="relative z-10 hover:bg-neon/20 rounded px-1 transition-colors duration-200"
+                    aria-label="Close category tab"
+                  >
+                    <LucideIcons.X className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </button>
+                </button>
+              </>
+            ) : (
+              <div className="flex items-end gap-0">
+                <button
+                  onClick={() => handleCategoryTabClick(null)}
+                  className="relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 font-pixel-body text-xs sm:text-sm md:text-base transition-all duration-200 whitespace-nowrap z-10 bg-os-dark text-neon/70 border-t-2 border-l-2 border-r-2 border-neon/50 border-b-2 hover:text-neon hover:border-neon tab-shape-first"
+                >
+                  <span className="relative z-10">Main</span>
+                </button>
+                <button
+                  className="relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 font-pixel-body text-xs sm:text-sm md:text-base transition-all duration-200 whitespace-nowrap z-10 bg-os-black text-neon border-t-2 border-l-2 border-r-2 border-neon border-b-0 shadow-neon flex items-center gap-2 tab-shape-middle -mb-[2px] sm:-mb-[3px] md:-mb-[4px]"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-b from-neon/10 to-transparent pointer-events-none" />
+                  <span className="relative z-10">{currentCategoryItem.title}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      closeCategoryTab();
+                    }}
+                    className="relative z-10 hover:bg-neon/20 rounded px-1 transition-colors duration-200"
+                    aria-label="Close category tab"
+                  >
+                    <LucideIcons.X className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </button>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className={`border-2 sm:border-3 md:border-4 border-neon bg-os-black p-2 sm:p-3 md:p-4 lg:p-6 overflow-y-auto overflow-x-hidden flex-1 min-h-0 border-t-0`}>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
             {allSlots.map((item, index) => {
               const isEmpty = item === null;

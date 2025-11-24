@@ -209,6 +209,32 @@
     box-shadow: 0 0 20px color-mix(in srgb, var(--color-neon) 50%, transparent);
   }
 
+  .tab-shape-first {
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 12px 100%);
+  }
+
+  .tab-shape-middle {
+    clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+    margin-left: -12px;
+  }
+
+  .tab-chip {
+    position: relative;
+    border: 2px solid var(--color-neon);
+    background: var(--color-os-black);
+  }
+
+  .tab-chip-active {
+    background: var(--color-os-black);
+    border-color: var(--color-neon);
+    border-bottom: none;
+  }
+
+  .tab-chip-inactive {
+    background: var(--color-os-dark);
+    border-color: var(--color-neon);
+  }
+
   @keyframes pulse {
     0%, 100% {
       opacity: 1;

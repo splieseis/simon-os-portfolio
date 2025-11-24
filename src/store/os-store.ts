@@ -15,6 +15,10 @@ export interface WindowConfig {
 
 export const openWindows = atom<WindowConfig[]>([]);
 
+export const activeGroup = atom<string | null>(null);
+export const activeCategoryTab = atom<string | null>(null);
+export const categoryTabHistory = atom<string[]>([]);
+
 export const setBootStatus = (status: boolean) => isBooting.set(status);
 
 export const openApp = (id: string) => {
@@ -23,4 +27,23 @@ export const openApp = (id: string) => {
 
 export const closeApp = () => {
   activeAppId.set(null);
+};
+
+export const setActiveGroup = (groupId: string | null) => {
+  activeGroup.set(groupId);
+};
+
+export const setActiveCategoryTab = (categoryId: string | null) => {
+  if (categoryId) {
+    const history = categoryTabHistory.get();
+    if (!history.includes(categoryId)) {
+      categoryTabHistory.set([...history, categoryId]);
+    }
+  }
+  activeCategoryTab.set(categoryId);
+};
+
+export const closeCategoryTab = () => {
+  activeCategoryTab.set(null);
+  categoryTabHistory.set([]);
 };
