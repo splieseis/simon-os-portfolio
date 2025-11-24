@@ -1,5 +1,7 @@
 export type ItemType = 'project' | 'mini-app' | 'experience' | 'recipe' | 'writing' | 'social';
 
+export type ItemAction = 'link' | 'iframe' | 'component' | 'download';
+
 export interface InventoryItem {
   id: string;
   type: ItemType;
@@ -7,8 +9,10 @@ export interface InventoryItem {
   description?: string;
   icon: string;
   color?: string;
+  action?: ItemAction;
   link?: string;
   componentKey?: string;
+  downloadPath?: string;
   tags?: string[];
   date?: string; 
   featured?: boolean;

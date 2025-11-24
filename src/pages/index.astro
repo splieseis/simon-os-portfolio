@@ -2,6 +2,7 @@
 import BootSequence from '../components/react/BootSequence';
 import InventoryGrid from '../components/react/InventoryGrid';
 import { ThemeProvider } from '../components/react/ThemeProvider';
+import { AppOverlay } from '../components/react/AppOverlay';
 import OsLayout from '../layouts/OsLayout.astro';
 ---
 
@@ -20,6 +21,7 @@ import OsLayout from '../layouts/OsLayout.astro';
         <div id="desktop-layer" class="fixed inset-0 z-10 w-screen h-screen">
           <InventoryGrid client:load />
         </div>
+        <AppOverlay client:load />
       </ThemeProvider>
     </OsLayout>
   </body>

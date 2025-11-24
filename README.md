@@ -34,9 +34,15 @@ It combines the performance of **Astro** (static HTML) with the interactivity of
 
 - **🎮 Console Interface:** A centralized 'Inventory Grid' navigation style inspired by RPG menus.
 
-- **🔍 Focus Modals:** Clicking an item opens a focused, centered overlay (No dragging, just pure focus).
+- **🔍 Focus Modals:** Clicking an item opens a focused, centered overlay with CRT effects. Press ESC or click outside to close.
 
 - **🔌 Mini-App Registry:** Built-in system to map JSON keys to interactive React components (Calculators, Converters, Games).
+
+- **👤 About Me Page:** Beautiful, customizable About Me page with sections for bio, skills, interests, and social links. Fully configurable via `src/config/about-me.ts`.
+
+- **📄 CV/Resume with PDF Download:** Professional CV display with PDF download button. Customize via `src/config/cv.ts` and place your PDF in `public/assets/`.
+
+- **🔗 Flexible Action System:** Each inventory item can be a direct link, iframe (for mini-apps), component overlay, or download action. Fully configurable and template-friendly.
 
 ## 🏗️ Architecture
 
@@ -142,23 +148,96 @@ Edit `src/config/site.ts` to change the site title, SEO description, and social 
 
 ### 2. Add Your Items
 
-Edit `src/config/inventory.ts`. This is your database.
+Edit `src/config/inventory.ts`. This is your database. Each item can have different action types:
 
 ```typescript
-export const inventory = [
+export const inventory: InventoryItem[] = [
+  // Direct link (opens in new tab)
   {
-    id: 'my-project',
-    type: 'project',
-    title: 'My Cool App',
-    description: 'A description of what I built.',
-    icon: 'rocket', // Lucide icon name or custom theme icon
-    link: 'https://github.com/...'
+    id: 'github',
+    type: 'social',
+    title: 'GitHub',
+    icon: 'github',
+    action: 'link',
+    link: 'https://github.com/yourusername'
   },
+  
+  // Component overlay (like About Me)
+  {
+    id: 'about-me',
+    type: 'experience',
+    title: 'About Me',
+    icon: 'about-me',
+    action: 'component',
+    componentKey: 'AboutMe'
+  },
+  
+  // Iframe (for mini-apps deployed elsewhere)
+  {
+    id: 'my-mini-app',
+    type: 'mini-app',
+    title: 'My Mini App',
+    icon: 'apps',
+    action: 'iframe',
+    link: 'https://my-app.vercel.app'
+  },
+  
+  // Download (component with PDF download button)
+  {
+    id: 'my-cv',
+    type: 'writing',
+    title: 'CV / Resume',
+    icon: 'cv',
+    action: 'download',
+    componentKey: 'CV',
+    downloadPath: '/assets/cv.pdf' // Place PDF in public/assets/
+  },
+  
   // Add as many as you want!
 ]
 ```
 
-### 3. Customize Themes
+**Action Types:**
+- `'link'`: Opens external URL in new tab (for social profiles, external sites)
+- `'iframe'`: Opens URL in iframe overlay (for mini-apps deployed elsewhere)
+- `'component'`: Opens React component in overlay (for custom content)
+- `'download'`: Opens component with PDF download button (for CV/Resume)
+
+### 3. Customize CV / Resume
+
+Edit `src/config/cv.ts` to add your CV/resume information. The CV component displays beautifully in the overlay and includes a download button for your PDF.
+
+**To add your PDF:**
+1. Place your PDF file in `public/assets/cv.pdf`
+2. Update the `downloadPath` in your inventory item: `downloadPath: '/assets/cv.pdf'`
+
+All fields in the CV config are optional - only include what you want to display.
+
+### 4. Customize About Me Page
+
+Edit `src/config/about-me.ts` to personalize your About Me page. All fields are optional - only include what you want to display:
+
+```typescript
+export const aboutMeConfig: AboutMeConfig = {
+  name: 'Your Name',
+  tagline: 'Your tagline here',
+  bio: ['Your bio paragraph 1', 'Your bio paragraph 2'],
+  currentRole: 'Your Role',
+  location: '🌍 Your Location',
+  skills: ['Skill 1', 'Skill 2', 'Skill 3'],
+  interests: ['Interest 1', 'Interest 2'],
+  socials: {
+    github: 'https://github.com/yourusername',
+    linkedin: 'https://linkedin.com/in/yourusername',
+    // ... more socials
+  },
+  funFacts: ['Fun fact 1', 'Fun fact 2'],
+};
+```
+
+The About Me page will automatically update when you modify this config file.
+
+### 5. Customize Themes
 
 SimonOS includes a powerful theming system. The default "Neon Matrix" theme comes with:
 - Custom background image
@@ -194,8 +273,8 @@ To create your own theme or modify existing ones, see the [Theming Guide](./THEM
 - [x] Theming System: Dynamic theme configuration with custom assets
 - [x] Custom Icons: Theme-specific icon support (24+ icons in neon theme)
 - [x] Responsive Design: Mobile-first responsive layout improvements
-- [ ] App Overlay: Console-style modal interactions
-- [ ] Registry: Tool mapping system
+- [x] App Overlay: Console-style modal interactions
+- [x] Registry: Tool mapping system
 - [ ] Cartridge Club: Webring implementation
 
 ## 🤝 Contributing

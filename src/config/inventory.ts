@@ -1,13 +1,58 @@
 import type { InventoryItem } from '../types';
 
 export const inventory: InventoryItem[] = [
-  { id: "my-cv", type: 'writing', title: 'CV / Resume', icon: 'cv' },
-  { id: 'about-me', type: 'experience', title: 'About Me', icon: 'about-me', componentKey: 'AboutMe' },
-  { id: 'github', type: 'social', title: 'GitHub', icon: 'github' },
-  { id: 'linkedin', type: 'social', title: 'LinkedIn', icon: 'linkedin' },
-  { id: 'x-profile', type: 'social', title: 'X Profile', icon: 'x' },
+  { 
+    id: "my-cv", 
+    type: 'writing', 
+    title: 'CV / Resume', 
+    icon: 'cv',
+    action: 'download',
+    componentKey: 'CV',
+    downloadPath: '/assets/cv.pdf' // Place your PDF in public/assets/cv.pdf
+  },
+  
+  // Component overlay (About Me)
+  { 
+    id: 'about-me', 
+    type: 'experience', 
+    title: 'About Me', 
+    icon: 'about-me', 
+    action: 'component',
+    componentKey: 'AboutMe' 
+  },
+  { 
+    id: 'github', 
+    type: 'social', 
+    title: 'GitHub', 
+    icon: 'github',
+    action: 'link',
+    link: 'https://github.com/example' 
+  },
+  { 
+    id: 'linkedin', 
+    type: 'social', 
+    title: 'LinkedIn', 
+    icon: 'linkedin',
+    action: 'link',
+    link: 'https://linkedin.com/in/example' 
+  },
+  { 
+    id: 'x-profile', 
+    type: 'social', 
+    title: 'X Profile', 
+    icon: 'x',
+    action: 'link',
+    link: 'https://x.com/example' 
+  },
   { id: 'software-projects', type: 'project', title: 'Software Projects', icon: 'software' },
-  { id: 'simon-os-repo', type: 'project', title: 'SimonOS Source', icon: 'simon-os-github', link: 'https://github.com/splieseis/simon-os' },
+  { 
+    id: 'portfolio-repo', 
+    type: 'project', 
+    title: 'Portfolio Source', 
+    icon: 'simon-os-github', 
+    action: 'link',
+    link: 'https://github.com/splieseis/simon-os' 
+  },
   { id: 'work-projects', type: 'project', title: 'Work Projects', icon: 'work' },
   { id: 'side-hustles', type: 'project', title: 'Side Hustles', icon: 'side-hustles' },
   { id: 'contact', type: 'social', title: 'Contact', icon: 'contact' },
@@ -18,7 +63,14 @@ export const inventory: InventoryItem[] = [
   { id: 'random-thoughts', type: 'writing', title: 'Random Thoughts', icon: 'thoughts' },
   { id: 'affiliate-links', type: 'social', title: 'Affiliate Links', icon: 'affiliate-link' },
   { id: 'settings', type: 'project', title: 'Settings', icon: 'settings' },
-  { id: 'json-tool', type: 'mini-app', title: 'JSON Formatter', icon: 'json', componentKey: 'JsonFormatter' },
+  { 
+    id: 'json-tool', 
+    type: 'mini-app', 
+    title: 'JSON Formatter', 
+    icon: 'json', 
+    action: 'component',
+    componentKey: 'JsonFormatter' 
+  },
   { id: 'newsletter-archive', type: 'writing', title: 'Newsletter Archive', icon: 'news' },
   // { id: 'blog-posts', type: 'writing', title: 'Blog Posts', icon: 'book-open' },
   // { id: 'free-tools', type: 'mini-app', title: 'Free Tools', icon: 'terminal' },

@@ -5,6 +5,7 @@ import { isBooting, openApp } from '../../store/os-store';
 import { getThemeIconPath } from '../../store/theme-store';
 import { githubStats, isLoadingGithubStats } from '../../store/github-stats-store';
 import { inventory } from '../../config/inventory';
+import type { InventoryItem, ItemAction } from '../../types';
 import * as LucideIcons from 'lucide-react';
 import { calculateLevelInfo, formatXpProgress } from '../../utils/leveling';
 
@@ -23,11 +24,13 @@ export const InventoryGrid: React.FC = () => {
     ? calculateLevelInfo(stats.totalCommits)
     : calculateLevelInfo(0);
 
-  const handleItemClick = (itemId: string, link?: string) => {
-    if (link) {
-      window.open(link, '_blank');
+  const handleItemClick = (item: InventoryItem) => {
+    const action: ItemAction = item.action || (item.componentKey ? 'component' : item.link ? 'link' : 'component');
+    
+    if (action === 'link' && item.link) {
+      window.open(item.link, '_blank');
     } else {
-      openApp(itemId);
+      openApp(item.id);
     }
   };
 
@@ -92,7 +95,7 @@ export const InventoryGrid: React.FC = () => {
               return (
                 <button
                   key={item.id}
-                  onClick={() => handleItemClick(item.id, item.link)}
+                  onClick={() => handleItemClick(item)}
                   className="group aspect-square flex flex-col items-center justify-center gap-0.5 sm:gap-1 bg-os-dark border border-neon cursor-pointer transition-all duration-200 hover:bg-neon/20 hover:scale-105 hover:shadow-neon relative overflow-hidden p-0.5 sm:p-1 min-h-0"
                 >
                   <div className="absolute inset-0 opacity-10 pointer-events-none">
