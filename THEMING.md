@@ -1,6 +1,6 @@
 # Theming Guide
 
-SimonOS supports a flexible theming system that allows you to customize colors, backgrounds, icons, and more. This guide explains how to use and create themes.
+SimonOS Portfolio supports a flexible theming system that allows you to customize colors, backgrounds, icons, and more. This guide explains how to use and create themes.
 
 ## Quick Start
 

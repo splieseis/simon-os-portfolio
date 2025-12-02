@@ -1,8 +1,8 @@
-# 👾 SimonOS (v0.1.0)
+# 👾 SimonOS Portfolio (v0.1.0)
 
-> **Turn your life into a video game.**
+> **Your retro-terminal developer portfolio.**
 
-> The open-source, retro-terminal operating system for your personal portfolio.
+> The open-source, pixel-art operating system for developers who refuse boring portfolios.
 
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -12,7 +12,7 @@
 
 ## 📖 About
 
-**SimonOS** is a "Headless Operating System" built for developers who want a portfolio that stands out in a sea of generic pages and cvs.
+**SimonOS Portfolio** is a retro-terminal portfolio template built for developers who want a portfolio that stands out in a sea of generic pages and cvs.
 
 It combines the performance of **Astro** (static HTML) with the interactivity of **React** (focus modals) to create a retro-futuristic console interface. It features a config-driven architecture, meaning you can add projects, tools, and blog posts without touching the core code—just edit a JSON file.
 
@@ -48,7 +48,7 @@ It combines the performance of **Astro** (static HTML) with the interactivity of
 
 ## 🏗️ Architecture
 
-SimonOS follows a "Config-as-Data" pattern.
+SimonOS Portfolio follows a "Config-as-Data" pattern.
 
 ```mermaid
 graph TD
@@ -85,8 +85,8 @@ Node.js 22+ or Bun 1.3+
 **Clone the repository**
 
 ```bash
-git clone https://github.com/splieseis/simon-os.git
-cd simon-os
+git clone https://github.com/splieseis/simon-os-portfolio.git
+cd simon-os-portfolio
 ```
 
 **Install dependencies**
@@ -142,7 +142,7 @@ bun run dev
 
 ## ⚙️ Customization
 
-You can make this OS your own by editing the files in `src/config`.
+You can make this portfolio your own by editing the files in `src/config`.
 
 ### 1. Update Personal Info
 
@@ -241,7 +241,7 @@ The About Me page will automatically update when you modify this config file.
 
 ### 5. Customize Themes
 
-SimonOS includes a powerful theming system. The default "Neon Matrix" theme comes with:
+SimonOS Portfolio includes a powerful theming system. The default "Neon Matrix" theme comes with:
 - Custom background image
 - 24+ custom icons (WebP format)
 - Custom color palette

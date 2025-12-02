@@ -6,6 +6,7 @@ import { ProgressBar } from './ProgressBar';
 
 const BOOT_LOGS = [
   "Booting SimonOS Kernel...",
+  "Booting SimonOS Portfolio...",
   "Initializing Astro Shell...",
   "Loading React Components...",
   "Mounting Nano Stores State...",
@@ -13,12 +14,12 @@ const BOOT_LOGS = [
   "Scanning Cartridge Shelf...",
   "Launching Window Manager...",
   "Establishing Satellite iFrame Connection...",
-  "System Ready. Welcome to SimonOS."
+  "System Ready. Welcome to SimonOS Portfolio."
 ];
 
 export const BootSequence = () => {
   const [progress, setProgress] = useState(0);
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs, setLogs] = useState<string[]>([BOOT_LOGS[0]]);
   const [isVisible, setIsVisible] = useState(true);
   const hasBooted = useRef(false);
 
@@ -31,22 +32,25 @@ export const BootSequence = () => {
     });
 
     let currentProgress = 0;
-    let logIndex = 0;
+    let logIndex = 1;
 
     const interval = setInterval(() => {
       const jump = Math.random() * 8;
       currentProgress = Math.min(currentProgress + jump, 100);
       setProgress(currentProgress);
 
-      const thresholdIndex = Math.floor((currentProgress / 100) * (BOOT_LOGS.length - 1));
-      if (thresholdIndex > logIndex) {
-        setLogs(prev => [...prev, BOOT_LOGS[logIndex]]);
-        logIndex++;
+      const thresholdIndex = Math.floor((currentProgress / 100) * BOOT_LOGS.length);
+      if (thresholdIndex >= logIndex && logIndex < BOOT_LOGS.length) {
+        const logsToAdd = BOOT_LOGS.slice(logIndex, thresholdIndex + 1);
+        setLogs(prev => [...prev, ...logsToAdd]);
+        logIndex = thresholdIndex + 1;
       }
 
       if (currentProgress >= 100) {
         clearInterval(interval);
-        setLogs(BOOT_LOGS);
+        if (logIndex < BOOT_LOGS.length) {
+          setLogs(prev => [...prev, ...BOOT_LOGS.slice(logIndex)]);
+        }
         setTimeout(() => {
           setIsVisible(false);
           setTimeout(() => {
@@ -76,10 +80,11 @@ export const BootSequence = () => {
             <motion.div 
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="flex items-center justify-center w-full"
+              className="flex flex-col items-center justify-center w-full"
             >
-               <h1 className="simonos-logo">
-                 SimonOS
+               <h1 className="simonos-logo text-center">
+                 <span className="block">SimonOS</span>
+                 <span className="block text-[0.3em] leading-tight text-center">Portfolio</span>
                </h1>
             </motion.div> 
 

@@ -1,10 +1,10 @@
 # Environment Variables Setup
 
-This document lists all environment variables used in SimonOS.
+This document lists all environment variables used in SimonOS Portfolio.
 
 ## Required Environment Variables
 
-**None!** SimonOS works out of the box without any environment variables.
+**None!** SimonOS Portfolio works out of the box without any environment variables.
 
 ## Optional Environment Variables
 
@@ -17,7 +17,7 @@ This document lists all environment variables used in SimonOS.
 **How to get it:**
 1. Go to [GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)](https://github.com/settings/tokens)
 2. Click "Generate new token (classic)"
-3. Give it a descriptive name (e.g., "SimonOS Stats")
+3. Give it a descriptive name (e.g., "SimonOS Portfolio Stats")
 4. Set expiration (recommended: 90 days or custom)
 5. Check these scopes:
    - ✅ `repo` - Access private repositories (to count private repo commits)

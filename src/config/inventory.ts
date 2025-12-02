@@ -56,7 +56,7 @@ export const inventory: InventoryItem[] = [
     title: 'Portfolio Source', 
     icon: 'simon-os-github', 
     action: 'link',
-    link: 'https://github.com/splieseis/simon-os',
+    link: 'https://github.com/splieseis/simon-os-portfolio',
     group: 'professional'
   },
   { id: 'work-projects', type: 'project', title: 'Work Projects', icon: 'work', category: 'work-projects', group: 'professional' },
